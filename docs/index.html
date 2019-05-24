@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en" ng-app="ncsApp">
 <head>
 	<title>Naiguel Santos - Developer</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,7 +24,7 @@
 	<link href="01-cv-portfolio/css/responsive.css" rel="stylesheet">
 
 </head>
-<body>
+<body ng-controller="ProjectsListController">
 
 	<header>
 		<div class="container">
@@ -91,11 +91,17 @@
 				<div class="col-sm-4">
 					<div class="heading">
 						<h3><b>My Work</b></h3>
-						<!-- <h6 class="font-lite-black"><b>MY WORK</b></h6> -->
+						<h6 class="font-lite-black"><b>MY PROJECTS</b></h6>
+
 					</div>
 				</div><!-- col-sm-4 -->
 				<div class="col-sm-8">
+
+
 					<div class="portfolioFilter clearfix margin-b-80">
+						<!-- <a  href="#" data-filter="{{category.filter}}" ng-class=" !$index ? 'current' : '' " ng-repeat="category in categories">
+							<b ng-bind="category.name"></b>
+						</a> -->
 						<a href="#" data-filter="*" class="current"><b>ALL</b></a>
 						<a href="#" data-filter=".web-design"><b>FRONT END</b></a>
 						<a href="#" data-filter=".branding"><b>PHP</b></a>
@@ -130,7 +136,7 @@
 					<img src="images/portfolio-8-300x400.jpg" alt=""></a>
 				<a class="img" href="images/portfolio-9-300x400.jpg" data-fluidbox>
 					<img src="images/portfolio-9-300x400.jpg" alt=""></a>
-			</div><!-- p-item -->
+			</div>
 
 			<div class="p-item branding graphic-design">
 				<a href="images/portfolio-3-600x400.jpg" data-fluidbox>
