@@ -25697,18 +25697,22 @@ ion-navbar.toolbar {
   min-height: 46px;
 }
 
+body .toolbar-background,
 body .toolbar,
 body .toolbar-background-md,
 body .toolbar-md-primary .toolbar-background-md {
   background: #FBBB0E !important;
 }
 
+body button.fab,
 body .button,
 body .button-md,
 body .fab-md {
   background: #27469B !important;
 }
 
+body ion-header .icon,
+body .toolbar-title,
 body .arrow-back-btn,
 body .bar-button,
 body .bar-button-clear-md,
@@ -25735,6 +25739,12 @@ body .button-md.button-md-danger {
   left: 0;
 }
 
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 page-login .button-md {
   background-color: #27469B !important;
 }
@@ -25750,7 +25760,7 @@ page-login .button-clear-md {
 page-login div#brand-login {
   width: 100px;
   height: 100px;
-  background-image: url(../assets/icon/splashscreen.svg);
+  background-image: url(../assets/icon/splashscreen.png);
   margin: 0 auto;
   background-size: cover;
   background-repeat: no-repeat;
