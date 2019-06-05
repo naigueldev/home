@@ -25711,6 +25711,11 @@ body .fab-md {
   background: #27469B !important;
 }
 
+body .checkbox .checkbox-icon.checkbox-checked {
+  border-color: #27469B !important;
+  background-color: #27469B !important;
+}
+
 body ion-header .icon,
 body .toolbar-title,
 body .arrow-back-btn,
@@ -25743,6 +25748,30 @@ body .button-md.button-md-danger {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.item-checkbox .scratch-item.scratch-active {
+  width: 100% !important;
+}
+
+.item-checkbox .scratch-item {
+  width: 0;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  content: "";
+  height: 2px;
+  position: absolute;
+  top: 50%;
+  left: 36px;
+  display: block;
+  margin: 0 !important;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  background-color: #FBBB0E;
+}
+
+.item-checkbox-checked ion-label {
+  opacity: 0.4;
 }
 
 page-login .button-md {
@@ -25781,6 +25810,10 @@ page-products .prod-calc {
 page-products .prod-total {
   font-size: 1.8rem;
   font-weight: 700;
+}
+
+page-products .scroll-content {
+  padding-bottom: 65px !important;
 }
 
 page-reset-password .invalid {

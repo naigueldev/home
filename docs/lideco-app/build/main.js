@@ -334,7 +334,7 @@ var ListPage = /** @class */ (function () {
     };
     ListPage = ListPage_1 = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-            selector: 'page-list',template:/*ion-inline-start:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/list/list.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      Minhas listas\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n\n    <ion-list>\n        <ion-item-sliding *ngFor="let list of lists | async">\n          <ion-item (click)="openList(list.key)">\n            <h1>{{ list.name }}</h1>\n          </ion-item>\n          <ion-item-options side="left">\n            <button ion-button color="secondary" (click)="editList(list)">\n              <ion-icon name="create"></ion-icon>\n            </button>\n          </ion-item-options>\n\n          <ion-item-options side="right">\n            <button ion-button color="danger" (click)="removeList(list.key)">\n              <ion-icon name="trash"></ion-icon>\n            </button>\n          </ion-item-options>\n        </ion-item-sliding>\n      </ion-list>\n  \n  \n  <!-- fab placed to the top end -->\n  <ion-fab right bottom fixed>\n    <button ion-fab (click)="newList()">\n      <ion-icon name="add"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n'/*ion-inline-end:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/list/list.html"*/,
+            selector: 'page-list',template:/*ion-inline-start:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/list/list.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      Minhas listas\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n\n    <ion-list>\n        <ion-item-sliding *ngFor="let list of lists | async">\n          <ion-item (click)="openList(list.key)">\n            <ion-label class="list-name">{{ list.name }}</ion-label>\n          </ion-item>\n          <ion-item-options side="left">\n            <button ion-button color="secondary" (click)="editList(list)">\n              <ion-icon name="create"></ion-icon>\n            </button>\n          </ion-item-options>\n\n          <ion-item-options side="right">\n            <button ion-button color="danger" (click)="removeList(list.key)">\n              <ion-icon name="trash"></ion-icon>\n            </button>\n          </ion-item-options>\n        </ion-item-sliding>\n      </ion-list>\n  \n  \n  <!-- fab placed to the top end -->\n  <ion-fab right bottom fixed>\n    <button ion-fab (click)="newList()">\n      <ion-icon name="add"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n'/*ion-inline-end:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/list/list.html"*/,
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */], __WEBPACK_IMPORTED_MODULE_2__providers_list_list__["a" /* ListProvider */],
@@ -391,10 +391,9 @@ var ProductsPage = /** @class */ (function () {
         this.toast = toast;
         this.total_price = 0.00;
         this.list_id = this.navParams.get('list_key');
-        console.log("this.list_id =" + this.list_id);
+        // console.log("this.list_id ="+this.list_id );
     }
     ProductsPage.prototype.ionViewDidLoad = function () {
-        console.log('ionViewDidLoad ProductsPage');
         this.products = this.provider.getAllById(this.list_id);
         this.getTotalPrice();
     };
@@ -403,7 +402,6 @@ var ProductsPage = /** @class */ (function () {
         var productModal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_3__product_create_product_create__["a" /* ProductCreatePage */], { list_id: this.list_id });
         productModal.present();
         productModal.onDidDismiss(function () {
-            console.log("onDidDismiss productModal");
             _this.getTotalPrice();
         });
     };
@@ -412,7 +410,7 @@ var ProductsPage = /** @class */ (function () {
         var productModal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_3__product_create_product_create__["a" /* ProductCreatePage */], { list_id: this.list_id, product: product_obj });
         productModal.present();
         productModal.onDidDismiss(function () {
-            console.log("onDidDismiss productModal");
+            // console.log("onDidDismiss productModal");
             _this.getTotalPrice();
         });
     };
@@ -434,23 +432,34 @@ var ProductsPage = /** @class */ (function () {
         var total = 0.00;
         var PATH = this.provider.getPath();
         return this.db.list(PATH).valueChanges().subscribe(function (items) {
-            console.log("res" + JSON.stringify(items));
             items.forEach(function (item) {
-                console.log("ITEM:", item['total']);
-                var money = _this.helper.getMoney(item['total']);
-                console.log("GET MONEY = " + money);
-                var float_calc = item['total'].replace(/,/g, '.');
-                var dollar_float = parseFloat(_this.helper.formatMoney(float_calc));
-                console.log("DOLLAR_FLOAT = " + dollar_float);
-                total += parseFloat(dollar_float.toFixed(2));
+                console.log("ITEM total:", item['total']);
+                var total_item = item['total'];
+                console.log("total_item = " + total_item);
+                var dollar_float = _this.helper.real_to_dollar(total_item);
+                total += dollar_float;
                 console.log("TOTAL = " + total);
             });
             _this.total_price = total;
         });
     };
+    ProductsPage.prototype.check_item = function (item) {
+        var _this = this;
+        item["is_checked"] = (item["is_checked"]) ? false : true;
+        console.log("check_item = " + JSON.stringify(item));
+        this.provider.save(item)
+            .then(function () {
+            console.log("Checked Item OK");
+        })
+            .catch(function (e) {
+            _this.toast.create({ message: 'Erro ao marcar item.', duration: 3000 }).present();
+            console.error(e);
+        });
+        this.getTotalPrice();
+    };
     ProductsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-            selector: 'page-products',template:/*ion-inline-start:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/products/products.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      Meus Produtos\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n\n    <ion-list>\n        <ion-item-sliding *ngFor="let product of products | async">\n          <button ion-item (click)="editProduct(product)" class="pl-0">\n            <ion-grid>\n              <ion-row class="m-0">\n                <ion-col col-8 class="text-truncate">\n                  <h1 class="product-name">{{ product.name }}</h1>\n                </ion-col>\n                <ion-col col-4>\n                  <div class="pull-right col-prices text-center">\n                    <p class="m-0 prod-total mb-1">R$ {{ product.total }}</p>\n                    <p class="m-0 prod-calc" *ngIf="product.quantity > 1">R$ {{ product.price }} <span class="multiply">*</span> {{ product.quantity }}</p>\n                  </div>\n                </ion-col>\n              </ion-row>\n            </ion-grid>\n          </button>\n          <ion-item-options side="left">\n            <button ion-button color="secondary" class="success" (click)="editProduct(product)">\n              <ion-icon name="create"></ion-icon>\n            </button>\n          </ion-item-options>\n\n          <ion-item-options side="right">\n            <button ion-button color="danger" class="danger" (click)="removeProduct(product.key)">\n              <ion-icon name="trash"></ion-icon>\n            </button>\n          </ion-item-options>\n\n\n        </ion-item-sliding>\n      </ion-list>\n  \n  \n  <!-- fab placed to the top end -->\n  <ion-fab right bottom fixed>\n    <button ion-fab (click)="newProduct()">\n      <ion-icon name="add"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n\n<ion-footer>\n    <ion-toolbar>\n      <ion-title>Total: {{total_price | currency:\'BRL\':2 }}</ion-title>\n    </ion-toolbar>\n  </ion-footer>\n'/*ion-inline-end:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/products/products.html"*/,
+            selector: 'page-products',template:/*ion-inline-start:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/products/products.html"*/'<ion-header>\n  <ion-navbar color="primary">\n    <ion-title>\n      Meus Produtos\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  \n  <ion-list>\n    <ion-item-sliding *ngFor="let product of products | async">\n      \n      <button ion-item class="pl-0">\n        <div item-start class="scratch-item {{ (product.is_checked) ? \'scratch-active\' : \'\'}}"></div>\n        \n        <ion-checkbox [checked]="product.is_checked" (click)="check_item(product)"></ion-checkbox>\n        <ion-label class="prod-name">{{ product.name }}</ion-label>\n\n        <div float-right item-end class="pull-right col-prices text-center">\n          <p class="m-0 prod-total mb-1">R${{ product.total }}</p>\n          <p class="m-0 prod-calc" *ngIf="product.quantity > 1">R${{ product.price }} <span class="multiply">*</span> {{ product.quantity }}</p>\n        </div>\n        \n      </button>\n      \n      <ion-item-options side="left">\n        <button ion-button color="secondary" class="success" (click)="editProduct(product)">\n          <ion-icon name="create"></ion-icon>\n        </button>\n      </ion-item-options>\n      \n      <ion-item-options side="right">\n        <button ion-button color="danger" class="danger" (click)="removeProduct(product.key)">\n          <ion-icon name="trash"></ion-icon>\n        </button>\n      </ion-item-options>\n      \n      \n    </ion-item-sliding>\n  </ion-list>\n  \n  \n  <!-- fab placed to the top end -->\n  <ion-fab right bottom fixed>\n    <button ion-fab (click)="newProduct()">\n      <ion-icon name="add"></ion-icon>\n    </button>\n  </ion-fab>\n</ion-content>\n\n<ion-footer>\n  <ion-toolbar>\n    <ion-title>Total: {{total_price | currency:\'BRL\':2 }}</ion-title>\n  </ion-toolbar>\n</ion-footer>\n'/*ion-inline-end:"/Users/naiguelsantos/Documents/PROGRAMMING/IONIC/projects/applistadecompras.com.br/applistadecompras/src/pages/products/products.html"*/,
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */],
             __WEBPACK_IMPORTED_MODULE_2__providers_products_products__["a" /* ProductsProvider */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* ModalController */],
@@ -539,9 +548,13 @@ var ProductCreatePage = /** @class */ (function () {
         this.calc_prices();
     };
     ProductCreatePage.prototype.calc_prices = function () {
-        var price_dollar = this.product.price.replace(',', '.');
-        console.log("number replace = " + price_dollar);
-        var multiplication = this.product.quantity * parseFloat(price_dollar);
+        var prod_price = this.product.price;
+        prod_price = prod_price.toString();
+        var price_dollar = prod_price.replace(/\./g, '');
+        console.log("number replace dots = " + price_dollar);
+        var price_comma = price_dollar.replace(/\,/g, '.');
+        console.log("number price_comma = " + price_comma);
+        var multiplication = this.product.quantity * parseFloat(price_comma);
         console.log("number requantity x parse float dollar = " + multiplication);
         var multiplication_num = multiplication.toFixed(2);
         console.log("number fixed 2 = " + multiplication_num);
@@ -1062,6 +1075,16 @@ var HelperProvider = /** @class */ (function () {
         var date_now = new Date().toISOString();
         console.log("DATE NOW = " + date_now);
         return date_now;
+    };
+    HelperProvider.prototype.real_to_dollar = function (price) {
+        price = price.toString();
+        var replace_dots = price.replace(/\./g, '');
+        console.log("LET replace_dots = " + replace_dots);
+        var replace_comma = replace_dots.replace(/\,/g, '.');
+        console.log("replace_comma  = " + replace_comma);
+        var dollar_float = parseFloat(replace_comma);
+        console.log("DOLLAR_FLOAT = " + dollar_float);
+        return dollar_float;
     };
     HelperProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
